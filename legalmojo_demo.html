@@ -1,488 +1,458 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Legal MoJo AI â Multi-Agent Orchestration</title>
-  <style>
-    :root {
-      --bg: #0a0e1a;
-      --surface: #111827;
-      --surface2: #1a2235;
-      --border: #1e2d45;
-      --accent: #3b82f6;
-      --accent2: #8b5cf6;
-      --accent3: #10b981;
-      --gold: #f59e0b;
-      --text: #e2e8f0;
-      --muted: #64748b;
-      --danger: #ef4444;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-      min-height: 100vh;
-      padding: 0;
-    }
+<meta charset="UTF-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Legal MoJo AI â Multi-Agent Orchestration</title>
+<meta name="description" content="Legal MoJo AI orchestrates Claude, GPT-4o, and Gemini in parallel to analyze legal matters in seconds. MoJo Score = Output Words Ã· Human Seconds." />
+<style>
+  :root {
+    --bg: #0a0d1a;
+    --bg-soft: #0f1326;
+    --card: #151a33;
+    --card-2: #1a2040;
+    --border: #252b52;
+    --text: #e8ecff;
+    --muted: #8b93ba;
+    --muted-2: #64748b;
+    --accent: #7c5cff;
+    --accent-2: #00e0b8;
+    --accent-3: #ffb020;
+    --danger: #ff5d7a;
+    --success: #3ddc97;
+    --radius: 14px;
+    --shadow: 0 20px 60px rgba(0,0,0,0.45);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, Helvetica, Arial, sans-serif;
+    background:
+      radial-gradient(1200px 800px at 15% -10%, #1a1f4d 0%, transparent 60%),
+      radial-gradient(900px 600px at 100% 0%, #2a1550 0%, transparent 55%),
+      var(--bg);
+    color: var(--text);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+  .container { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
 
-    /* ââ Header ââ */
-    header {
-      background: linear-gradient(135deg, #0a0e1a 0%, #0d1b38 100%);
-      border-bottom: 1px solid var(--border);
-      padding: 18px 32px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .logo-icon {
-      width: 40px; height: 40px;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 20px;
-    }
-    .logo-text h1 { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; }
-    .logo-text span { font-size: 12px; color: var(--muted); }
-    .mojo-badge {
-      background: linear-gradient(135deg, var(--gold), #d97706);
-      color: #000;
-      font-weight: 800;
-      font-size: 13px;
-      padding: 6px 16px;
-      border-radius: 999px;
-      letter-spacing: 1px;
-    }
+  /* HEADER */
+  header.top {
+    padding: 40px 0 10px;
+    text-align: center;
+  }
+  .logo-row {
+    display: flex; align-items: center; justify-content: center; gap: 14px;
+    margin-bottom: 10px;
+  }
+  .logo-mark {
+    width: 52px; height: 52px; border-radius: 14px;
+    background: conic-gradient(from 210deg, var(--accent), var(--accent-2), var(--accent-3), var(--accent));
+    display: grid; place-items: center;
+    font-size: 26px; color: #0a0d1a; font-weight: 900;
+    box-shadow: 0 8px 26px rgba(124,92,255,0.45);
+  }
+  h1.title {
+    font-size: clamp(28px, 4.2vw, 44px);
+    margin: 0; letter-spacing: -0.02em; font-weight: 800;
+    line-height: 1.15;
+  }
+  h1.title .grad {
+    background: linear-gradient(90deg, #ffffff 0%, #c8bfff 45%, #00e0b8 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .subtitle {
+    color: var(--muted); font-size: 16px; margin: 12px auto 0; max-width: 720px;
+  }
+  .badge-row { margin-top: 18px; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+  .badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 12px; border-radius: 999px; font-size: 12px; font-weight: 700;
+    letter-spacing: 0.4px; text-transform: uppercase;
+    background: rgba(124,92,255,0.12);
+    color: #c8bfff;
+    border: 1px solid rgba(124,92,255,0.35);
+  }
+  .badge.pulse { background: rgba(0,224,184,0.1); color: var(--accent-2); border-color: rgba(0,224,184,0.35); }
+  .badge .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent-2); box-shadow: 0 0 8px var(--accent-2); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
 
-    /* ââ Main layout ââ */
-    .container { max-width: 1300px; margin: 0 auto; padding: 32px 24px; }
+  /* STEPS */
+  .step {
+    background: linear-gradient(180deg, var(--card), var(--card-2));
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 24px;
+    margin-top: 24px;
+    box-shadow: var(--shadow);
+  }
+  .step-head {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 14px; gap: 12px; flex-wrap: wrap;
+  }
+  .step-title {
+    font-size: 18px; font-weight: 700; letter-spacing: -0.01em;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .step-number {
+    display: inline-grid; place-items: center;
+    width: 28px; height: 28px; border-radius: 8px;
+    background: rgba(124,92,255,0.18);
+    border: 1px solid rgba(124,92,255,0.45);
+    color: #e8e4ff; font-weight: 800; font-size: 14px;
+  }
+  .timer {
+    font-size: 13px; color: var(--muted);
+    font-family: "SF Mono", Menlo, Monaco, Consolas, monospace;
+    background: rgba(0,0,0,0.2); padding: 6px 12px; border-radius: 8px;
+    border: 1px solid var(--border);
+  }
 
-    /* ââ Input section ââ */
-    .input-section {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 24px;
-      margin-bottom: 24px;
-    }
-    .section-label {
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--accent);
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      margin-bottom: 12px;
-    }
-    .input-row {
-      display: flex;
-      gap: 16px;
-      align-items: flex-start;
-    }
-    textarea {
-      flex: 1;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      color: var(--text);
-      font-size: 14px;
-      padding: 14px 16px;
-      resize: vertical;
-      min-height: 110px;
-      outline: none;
-      transition: border-color 0.2s;
-      line-height: 1.6;
-    }
-    textarea:focus { border-color: var(--accent); }
-    textarea::placeholder { color: var(--muted); }
+  /* STEP 1 */
+  textarea#legal-input {
+    width: 100%; min-height: 180px; resize: vertical;
+    background: #0c1028; color: var(--text);
+    border: 1px solid var(--border); border-radius: 12px;
+    padding: 16px; font-family: inherit; font-size: 14px; line-height: 1.55;
+  }
+  textarea#legal-input:focus {
+    outline: none; border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(124,92,255,0.22);
+  }
+  .preset-label {
+    font-size: 13px; color: var(--muted);
+    margin: 14px 0 8px;
+  }
+  .presets { display: flex; gap: 8px; flex-wrap: wrap; }
+  .preset-btn {
+    padding: 9px 14px; font-size: 13px; font-weight: 600;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text); cursor: pointer;
+    transition: all .15s ease;
+  }
+  .preset-btn:hover {
+    border-color: var(--accent);
+    background: rgba(124,92,255,0.1);
+    transform: translateY(-1px);
+  }
+  .run-row { margin-top: 18px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 13px 22px; border-radius: 12px;
+    background: linear-gradient(135deg, var(--accent), #5a8cff);
+    color: white; font-weight: 700; font-size: 15px;
+    border: 0; cursor: pointer; transition: all .15s ease;
+    box-shadow: 0 10px 30px rgba(124,92,255,0.4);
+  }
+  .btn-primary:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 14px 36px rgba(124,92,255,0.5); }
+  .btn-primary:disabled { opacity: 0.7; cursor: not-allowed; }
+  .btn-ghost {
+    padding: 12px 18px; border-radius: 12px;
+    background: transparent; color: var(--text);
+    border: 1px solid var(--border); cursor: pointer; font-size: 14px; font-weight: 600;
+  }
+  .btn-ghost:hover { border-color: var(--accent); }
+  .spinner {
+    width: 14px; height: 14px; border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.25); border-top-color: #fff;
+    animation: spin 0.8s linear infinite; display: none;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
 
-    .presets {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      min-width: 190px;
-    }
-    .preset-label { font-size: 11px; color: var(--muted); font-weight: 600; margin-bottom: 4px; }
-    .preset-btn {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      color: var(--text);
-      font-size: 12px;
-      padding: 8px 12px;
-      border-radius: 8px;
-      cursor: pointer;
-      text-align: left;
-      transition: all 0.15s;
-    }
-    .preset-btn:hover { border-color: var(--accent); color: var(--accent); background: #1a2a4a; }
+  /* STEP 2 - AGENTS */
+  .agents { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  @media (max-width: 920px) { .agents { grid-template-columns: 1fr; } }
+  .agent-card {
+    background: #0c1028;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px;
+    display: flex; flex-direction: column;
+    min-height: 360px;
+    transition: border-color .2s ease;
+  }
+  .agent-card.done-1 { border-color: rgba(124,92,255,0.45); }
+  .agent-card.done-2 { border-color: rgba(255,93,122,0.45); }
+  .agent-card.done-3 { border-color: rgba(0,224,184,0.45); }
+  .agent-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .agent-title { font-weight: 700; font-size: 15px; display: flex; align-items: center; gap: 8px; }
+  .agent-model {
+    font-size: 11px; color: var(--muted);
+    padding: 3px 8px; border-radius: 999px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    margin-top: 4px;
+  }
+  .status-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+  }
+  .status-dot.active {
+    background: var(--accent-3);
+    box-shadow: 0 0 10px var(--accent-3);
+    animation: pulse 1s infinite;
+  }
+  .status-dot.done {
+    background: var(--success);
+    box-shadow: 0 0 10px var(--success);
+    animation: none;
+  }
+  .prog {
+    height: 3px; background: rgba(255,255,255,0.05); border-radius: 999px;
+    overflow: hidden; margin-bottom: 10px;
+  }
+  .prog-fill {
+    height: 100%; width: 0%;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    transition: width .1s linear;
+  }
+  .agent-out {
+    flex: 1;
+    font-family: "SF Mono", Menlo, Monaco, Consolas, monospace;
+    font-size: 12px;
+    color: #cfd4f0; line-height: 1.6;
+    white-space: pre-wrap;
+    overflow-y: auto;
+    max-height: 340px;
+    padding-right: 4px;
+  }
+  .agent-out::-webkit-scrollbar { width: 6px; }
+  .agent-out::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  .typing-cursor {
+    display: inline-block; width: 7px; height: 14px;
+    background: var(--accent-2); vertical-align: text-bottom;
+    margin-left: 2px; animation: blink 0.8s infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
 
-    .run-btn {
-      width: 100%;
-      margin-top: 16px;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      border: none;
-      color: #fff;
-      font-size: 15px;
-      font-weight: 700;
-      padding: 14px;
-      border-radius: 10px;
-      cursor: pointer;
-      letter-spacing: 0.5px;
-      transition: all 0.2s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-    }
-    .run-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 25px rgba(59,130,246,0.4); }
-    .run-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+  /* STEP 3 - MOJO */
+  .mojo-wrap {
+    display: grid; grid-template-columns: 1fr 2fr; gap: 16px;
+  }
+  @media (max-width: 920px) { .mojo-wrap { grid-template-columns: 1fr; } }
+  .mojo-score {
+    background: linear-gradient(135deg, rgba(124,92,255,0.15), rgba(0,224,184,0.1));
+    border: 1px solid rgba(124,92,255,0.35);
+    border-radius: 14px; padding: 22px;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    text-align: center;
+  }
+  .mojo-label { font-size: 12px; color: #c8bfff; letter-spacing: 0.5px; text-transform: uppercase; font-weight: 700; }
+  .mojo-number {
+    font-size: 72px; font-weight: 900; letter-spacing: -0.03em; line-height: 1;
+    background: linear-gradient(135deg, #ffffff, #c8bfff 40%, #00e0b8);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    margin: 8px 0;
+  }
+  .mojo-formula { font-size: 12px; color: var(--muted); font-family: "SF Mono", Menlo, monospace; }
+  .mojo-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .stat-card {
+    background: #0c1028; border: 1px solid var(--border);
+    border-radius: 12px; padding: 16px;
+  }
+  .stat-num { font-size: 28px; font-weight: 800; letter-spacing: -0.02em; }
+  .stat-num-check { font-size: 28px; font-weight: 800; color: var(--success); }
+  .stat-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; font-weight: 600; }
 
-    /* ââ Agents grid ââ */
-    .agents-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-    .agent-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 20px;
-      min-height: 260px;
-      position: relative;
-      overflow: hidden;
-      transition: border-color 0.3s, box-shadow 0.3s;
-    }
-    .agent-card.running { border-color: var(--accent); box-shadow: 0 0 20px rgba(59,130,246,0.15); }
-    .agent-card.done-1 { border-color: var(--accent); }
-    .agent-card.done-2 { border-color: var(--accent2); }
-    .agent-card.done-3 { border-color: var(--accent3); }
+  .synthesis {
+    margin-top: 16px;
+    background: #0c1028; border: 1px solid var(--border);
+    border-radius: 12px; padding: 18px;
+  }
+  .synthesis-label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; margin-bottom: 8px; }
+  .synthesis-text { font-size: 14px; color: #cfd4f0; line-height: 1.6; }
 
-    .agent-header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 14px;
-    }
-    .agent-icon {
-      width: 34px; height: 34px;
-      border-radius: 9px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 16px;
-      flex-shrink: 0;
-    }
-    .icon-1 { background: rgba(59,130,246,0.2); }
-    .icon-2 { background: rgba(139,92,246,0.2); }
-    .icon-3 { background: rgba(16,185,129,0.2); }
+  /* ORCHESTRATION */
+  .orch-setup {
+    margin-top: 24px;
+    padding: 22px;
+    background: linear-gradient(135deg, rgba(124,92,255,0.06), rgba(0,224,184,0.04));
+    border: 1px solid rgba(124,92,255,0.25);
+    border-radius: 14px;
+  }
+  .orch-setup h3 {
+    margin: 0 0 10px; font-size: 16px; display: flex; align-items: center; gap: 10px;
+  }
+  .orch-setup p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.65; }
+  .orch-setup code {
+    background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px;
+    font-family: "SF Mono", Menlo, monospace; font-size: 13px; color: var(--accent-2);
+  }
 
-    .agent-title { font-size: 13px; font-weight: 700; }
-    .agent-model { font-size: 11px; color: var(--muted); }
-
-    .status-dot {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      background: var(--muted);
-      margin-left: auto;
-      flex-shrink: 0;
-    }
-    .status-dot.active {
-      background: var(--accent);
-      animation: pulse 1s infinite;
-    }
-    .status-dot.done { background: var(--accent3); animation: none; }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.5; transform: scale(1.3); }
-    }
-
-    .agent-output {
-      font-size: 13px;
-      line-height: 1.65;
-      color: #cbd5e1;
-      min-height: 160px;
-    }
-    .agent-output .placeholder { color: var(--muted); font-style: italic; }
-
-    .typing-cursor {
-      display: inline-block;
-      width: 2px;
-      height: 14px;
-      background: var(--accent);
-      vertical-align: text-bottom;
-      animation: blink 0.7s step-end infinite;
-      margin-left: 1px;
-    }
-    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-
-    .progress-bar {
-      height: 3px;
-      background: var(--border);
-      border-radius: 2px;
-      margin-top: 14px;
-      overflow: hidden;
-    }
-    .progress-fill {
-      height: 100%;
-      border-radius: 2px;
-      width: 0%;
-      transition: width 0.1s linear;
-    }
-    .fill-1 { background: var(--accent); }
-    .fill-2 { background: var(--accent2); }
-    .fill-3 { background: var(--accent3); }
-
-    /* ââ MoJo Score Panel ââ */
-    .mojo-panel {
-      background: linear-gradient(135deg, #0d1b38 0%, #12102a 100%);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 28px;
-      display: flex;
-      align-items: center;
-      gap: 40px;
-      flex-wrap: wrap;
-    }
-    .mojo-score-display {
-      text-align: center;
-      flex-shrink: 0;
-    }
-    .mojo-number {
-      font-size: 72px;
-      font-weight: 900;
-      background: linear-gradient(135deg, var(--gold), #f97316);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      line-height: 1;
-      letter-spacing: -3px;
-    }
-    .mojo-label {
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--gold);
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      margin-top: 4px;
-    }
-    .mojo-formula {
-      font-size: 11px;
-      color: var(--muted);
-      margin-top: 6px;
-    }
-
-    .mojo-stats {
-      flex: 1;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-    }
-    .stat-box {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 16px;
-      text-align: center;
-    }
-    .stat-value { font-size: 28px; font-weight: 800; color: var(--text); }
-    .stat-label { font-size: 11px; color: var(--muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 1px; }
-
-    .mojo-summary {
-      flex: 1.5;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 16px;
-    }
-    .summary-title { font-size: 12px; font-weight: 700; color: var(--accent3); letter-spacing: 1.5px; margin-bottom: 10px; text-transform: uppercase; }
-    .summary-text { font-size: 13px; line-height: 1.6; color: #94a3b8; }
-
-    /* ââ Architecture note ââ */
-    .arch-note {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-left: 3px solid var(--accent2);
-      border-radius: 0 10px 10px 0;
-      padding: 16px 20px;
-      margin-top: 20px;
-      font-size: 13px;
-      color: #94a3b8;
-      line-height: 1.7;
-    }
-    .arch-note strong { color: var(--accent2); }
-
-    /* ââ Timer ââ */
-    #timer-display {
-      font-size: 12px;
-      color: var(--muted);
-      text-align: right;
-      margin-bottom: 8px;
-    }
-
-    /* ââ Responsive ââ */
-    @media (max-width: 900px) {
-      .agents-grid { grid-template-columns: 1fr; }
-      .mojo-panel { flex-direction: column; align-items: flex-start; }
-      .mojo-stats { grid-template-columns: repeat(3, 1fr); }
-    }
-    @media (max-width: 600px) {
-      .input-row { flex-direction: column; }
-      .mojo-stats { grid-template-columns: 1fr 1fr; }
-    }
-
-    /* Spinner */
-    .spinner {
-      width: 18px; height: 18px;
-      border: 2px solid rgba(255,255,255,0.3);
-      border-top-color: #fff;
-      border-radius: 50%;
-      animation: spin 0.6s linear infinite;
-      display: none;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    footer {
-      text-align: center;
-      padding: 24px;
-      color: var(--muted);
-      font-size: 12px;
-      border-top: 1px solid var(--border);
-      margin-top: 32px;
-    }
-    footer a { color: var(--accent); text-decoration: none; }
-  </style>
+  footer {
+    margin-top: 32px; padding: 24px 0 40px;
+    text-align: center; color: var(--muted); font-size: 13px;
+    border-top: 1px solid var(--border);
+  }
+  footer a { color: var(--accent-2); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+</style>
 </head>
 <body>
 
-<header>
-  <div class="logo">
-    <div class="logo-icon">âï¸</div>
-    <div class="logo-text">
-      <h1>Legal MoJo AI</h1>
-      <span>Multi-Agent Legal Orchestration System</span>
+<header class="top">
+  <div class="container">
+    <div class="logo-row">
+      <div class="logo-mark">â</div>
+      <h1 class="title">Legal MoJo AI â <span class="grad">Multi-Agent Legal Orchestration</span></h1>
+    </div>
+    <p class="subtitle">
+      Three specialized LLMs â Claude, GPT-4o, and Gemini â running in parallel to turn one legal question into a
+      summary, a risk assessment, and an action plan. One paste, one click, three perspectives.
+    </p>
+    <div class="badge-row">
+      <span class="badge pulse"><span class="dot"></span> MoJo System Â· Live Demo</span>
+      <span class="badge">â¡ Parallel Execution</span>
+      <span class="badge">ð§  3 Frontier Models</span>
     </div>
   </div>
-  <div class="mojo-badge">â¡ MOJO SYSTEM</div>
 </header>
 
-<div class="container">
+<main class="container">
 
-  <!-- Input -->
-  <div class="input-section">
-    <div class="section-label">ð Step 1 â Paste Your Legal Matter</div>
-    <div id="timer-display">â± Human input time: waiting...</div>
-    <div class="input-row">
-      <textarea id="legal-input" placeholder="Paste a contract clause, case brief, compliance question, or any legal matter here...&#10;&#10;Example: 'Our SaaS vendor contract includes an indemnification clause that may expose us to unlimited liability. The vendor is based in Delaware and we are in California. Analyze risks and recommended actions.'"
-        oninput="startTimer()"></textarea>
-      <div class="presets">
-        <div class="preset-label">Try an example:</div>
-        <button class="preset-btn" onclick="loadPreset('contract')">ð Contract Risk</button>
-        <button class="preset-btn" onclick="loadPreset('employment')">ð¤ Employment Dispute</button>
-        <button class="preset-btn" onclick="loadPreset('ip')">ð¡ IP / Patent Issue</button>
-        <button class="preset-btn" onclick="loadPreset('compliance')">ð Data Compliance</button>
-        <button class="preset-btn" onclick="loadPreset('litigation')">âï¸ Litigation Brief</button>
+  <!-- STEP 1 -->
+  <section class="step">
+    <div class="step-head">
+      <div class="step-title">
+        <span class="step-number">1</span>
+        <span>ð Paste your legal matter</span>
+      </div>
+      <div class="timer" id="timer-display">â± Human input time: waitingâ¦</div>
+    </div>
+
+    <textarea id="legal-input" spellcheck="false"
+      placeholder="Describe a legal matter â a contract clause, an employment issue, an IP concern, a compliance question, or a litigation scenario. Or click an example below to auto-fill."></textarea>
+
+    <div class="preset-label">Try an example:</div>
+    <div class="presets">
+      <button class="preset-btn" onclick="loadPreset('contract')">ð Contract Risk</button>
+      <button class="preset-btn" onclick="loadPreset('employment')">ð¤ Employment Dispute</button>
+      <button class="preset-btn" onclick="loadPreset('ip')">ð¡ IP / Patent Issue</button>
+      <button class="preset-btn" onclick="loadPreset('compliance')">ð Data Compliance</button>
+      <button class="preset-btn" onclick="loadPreset('litigation')">âï¸ Litigation Brief</button>
+    </div>
+
+    <div class="run-row">
+      <button class="btn-primary" id="run-btn" onclick="runOrchestration()">
+        <span id="btn-spinner" class="spinner"></span>
+        <span id="btn-icon">â¡</span>
+        <span id="btn-text">Run Multi-Agent Analysis</span>
+      </button>
+      <button class="btn-ghost" onclick="resetAll()">Reset</button>
+      <span style="color: var(--muted); font-size: 12px;">Tip: Ctrl/â + Enter to run</span>
+    </div>
+  </section>
+
+  <!-- STEP 2 -->
+  <section class="step">
+    <div class="step-head">
+      <div class="step-title">
+        <span class="step-number">2</span>
+        <span>ð¤ Three agents running in parallel</span>
       </div>
     </div>
-    <button class="run-btn" id="run-btn" onclick="runOrchestration()">
-      <span id="btn-icon">â¡</span>
-      <span id="btn-text">Run Multi-Agent Analysis</span>
-      <div class="spinner" id="btn-spinner"></div>
-    </button>
-  </div>
 
-  <!-- Agents -->
-  <div class="section-label" style="margin-bottom:12px;">ð¤ Step 2 â 3 Agents Running in Parallel</div>
-  <div class="agents-grid">
-    <div class="agent-card" id="card-1">
-      <div class="agent-header">
-        <div class="agent-icon icon-1">ð</div>
-        <div>
-          <div class="agent-title">Agent 1 â Legal Summarizer</div>
-          <div class="agent-model">claude-3-5-sonnet Â· Context extraction</div>
+    <div class="agents">
+      <div class="agent-card" id="card-1">
+        <div class="agent-head">
+          <div>
+            <div class="agent-title">ð Agent 1 â Legal Summarizer</div>
+            <div class="agent-model">claude-3-5-sonnet Â· Context extraction</div>
+          </div>
+          <span class="status-dot" id="dot-1"></span>
         </div>
-        <div class="status-dot" id="dot-1"></div>
+        <div class="prog"><div class="prog-fill" id="prog-1"></div></div>
+        <div class="agent-out" id="out-1"><em style="color:#64748b">Awaiting inputâ¦ will extract parties, key clauses, and legal context.</em></div>
       </div>
-      <div class="agent-output" id="out-1">
-        <span class="placeholder">Awaiting inputâ¦ will extract parties, key clauses, and legal context.</span>
-      </div>
-      <div class="progress-bar"><div class="progress-fill fill-1" id="prog-1"></div></div>
-    </div>
 
-    <div class="agent-card" id="card-2">
-      <div class="agent-header">
-        <div class="agent-icon icon-2">ð</div>
-        <div>
-          <div class="agent-title">Agent 2 â Risk Detector</div>
-          <div class="agent-model">gpt-4o Â· Liability & exposure analysis</div>
+      <div class="agent-card" id="card-2">
+        <div class="agent-head">
+          <div>
+            <div class="agent-title">ð© Agent 2 â Risk Detector</div>
+            <div class="agent-model">gpt-4o Â· Liability &amp; exposure analysis</div>
+          </div>
+          <span class="status-dot" id="dot-2"></span>
         </div>
-        <div class="status-dot" id="dot-2"></div>
+        <div class="prog"><div class="prog-fill" id="prog-2"></div></div>
+        <div class="agent-out" id="out-2"><em style="color:#64748b">Awaiting inputâ¦ will identify legal exposure, red flags, and risk levels.</em></div>
       </div>
-      <div class="agent-output" id="out-2">
-        <span class="placeholder">Awaiting inputâ¦ will identify legal exposure, red flags, and risk levels.</span>
-      </div>
-      <div class="progress-bar"><div class="progress-fill fill-2" id="prog-2"></div></div>
-    </div>
 
-    <div class="agent-card" id="card-3">
-      <div class="agent-header">
-        <div class="agent-icon icon-3">ð¯</div>
-        <div>
-          <div class="agent-title">Agent 3 â Action Planner</div>
-          <div class="agent-model">gemini-1.5-pro Â· Strategic recommendations</div>
+      <div class="agent-card" id="card-3">
+        <div class="agent-head">
+          <div>
+            <div class="agent-title">ð¯ Agent 3 â Action Planner</div>
+            <div class="agent-model">gemini-1.5-pro Â· Strategic recommendations</div>
+          </div>
+          <span class="status-dot" id="dot-3"></span>
         </div>
-        <div class="status-dot" id="dot-3"></div>
+        <div class="prog"><div class="prog-fill" id="prog-3"></div></div>
+        <div class="agent-out" id="out-3"><em style="color:#64748b">Awaiting inputâ¦ will generate prioritized action steps and negotiation strategy.</em></div>
       </div>
-      <div class="agent-output" id="out-3">
-        <span class="placeholder">Awaiting inputâ¦ will generate prioritized action steps and negotiation strategy.</span>
-      </div>
-      <div class="progress-bar"><div class="progress-fill fill-3" id="prog-3"></div></div>
     </div>
-  </div>
+  </section>
 
-  <!-- MoJo Score -->
-  <div class="section-label" style="margin-bottom:12px;">ð Step 3 â Your MoJo Score</div>
-  <div class="mojo-panel">
-    <div class="mojo-score-display">
-      <div class="mojo-number" id="mojo-number">â</div>
-      <div class="mojo-label">MoJo Score</div>
-      <div class="mojo-formula">Output Words Ã· Human Seconds</div>
-    </div>
-    <div class="mojo-stats">
-      <div class="stat-box">
-        <div class="stat-value" id="stat-words">0</div>
-        <div class="stat-label">Output Words</div>
-      </div>
-      <div class="stat-box">
-        <div class="stat-value" id="stat-time">0s</div>
-        <div class="stat-label">Human Time</div>
-      </div>
-      <div class="stat-box">
-        <div class="stat-value" id="stat-agents">3</div>
-        <div class="stat-label">Agents Used</div>
+  <!-- STEP 3 -->
+  <section class="step">
+    <div class="step-head">
+      <div class="step-title">
+        <span class="step-number">3</span>
+        <span>ð Your MoJo Score</span>
       </div>
     </div>
-    <div class="mojo-summary">
-      <div class="summary-title">â Synthesis</div>
-      <div class="summary-text" id="synthesis-text">Run the analysis to generate a cross-agent synthesis and strategic summary.</div>
-    </div>
-  </div>
 
-  <!-- Architecture note -->
-  <div class="arch-note">
-    <strong>âï¸ Orchestration Setup:</strong> Three specialized LLMs (Claude-3.5-Sonnet for extraction, GPT-4o for risk analysis, Gemini-1.5-Pro for strategy) run concurrently via <strong>Promise.all()</strong> parallelism, coordinated by a lightweight JavaScript orchestrator layer. Prompt routing is handled per-agent based on task type. Total human input: one paste + one click. Output: structured multi-perspective legal analysis with cross-agent synthesis â achieving a high MoJo Score by maximizing AI output relative to human effort.
-  </div>
+    <div class="mojo-wrap">
+      <div class="mojo-score">
+        <div class="mojo-label">MoJo Score</div>
+        <div class="mojo-number" id="mojo-number">â</div>
+        <div class="mojo-formula">Output Words Ã· Human Seconds</div>
+      </div>
+      <div>
+        <div class="mojo-stats">
+          <div class="stat-card">
+            <div class="stat-num" id="stat-words">0</div>
+            <div class="stat-label">Output Words</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num" id="stat-time">0s</div>
+            <div class="stat-label">Human Time</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num-check">â 3</div>
+            <div class="stat-label">Agents Used</div>
+          </div>
+        </div>
+        <div class="synthesis">
+          <div class="synthesis-label">ð§© Cross-agent synthesis</div>
+          <div class="synthesis-text" id="synthesis-text">Run the analysis to generate a cross-agent synthesis and strategic summary.</div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-</div>
+  <!-- ORCHESTRATION SETUP -->
+  <section class="orch-setup">
+    <h3>âï¸ Orchestration Setup</h3>
+    <p>
+      Three specialized LLMs â <b>Claude-3.5-Sonnet</b> for extraction, <b>GPT-4o</b> for risk analysis, and
+      <b>Gemini-1.5-Pro</b> for strategy â run concurrently via <code>Promise.all()</code> parallelism, coordinated by
+      a lightweight JavaScript orchestrator layer. Prompt routing is handled per-agent based on task type.
+      Total human input: one paste + one click. Output: a structured multi-perspective legal analysis with
+      cross-agent synthesis â achieving a high MoJo Score by maximizing AI output relative to human effort.
+    </p>
+  </section>
+
+</main>
 
 <footer>
-  Built by <strong>Gowtham Thirukkovalluri</strong> Â· Legal MoJo AI Â· Multi-Agent Orchestration Demo Â·
-  <a href="mailto:tkgo1599@gmail.com">tkgo1599@gmail.com</a>
+  <div class="container">
+    Built by <b>Gowtham Thirukkovalluri</b> Â· Legal MoJo AI Â· Multi-Agent Orchestration Demo Â·
+    <a href="mailto:tkgo1599@gmail.com">tkgo1599@gmail.com</a>
+  </div>
 </footer>
 
 <script>
@@ -492,9 +462,13 @@
 
   const presets = {
     contract: `Our SaaS vendor contract contains an unlimited indemnification clause requiring us to cover all losses arising from use of their API. The contract also has a unilateral amendment clause allowing the vendor to change pricing with 30 days notice. We are a Series B startup in California; vendor is incorporated in Delaware. The contract auto-renews annually. Analyze all material risks, flag any red flags, and recommend specific negotiation points before we sign.`,
+
     employment: `An employee is claiming wrongful termination after being let go during a reduction in force. The employee alleges they were terminated because they filed an internal harassment complaint 3 weeks prior to the RIF. We have documented performance issues over 6 months, but the timing is problematic. The employee has retained an attorney and sent a demand letter for $450,000. Analyze our legal exposure and recommend response strategy.`,
+
     ip: `Our engineering team used open-source code (MIT license) as a base and significantly modified it for our core product. We are now planning to raise a Series A. Our CTO believes we are protected but has not done a formal IP audit. A competitor has just filed a patent on a very similar algorithm. Assess the IP risks, potential patent infringement exposure, and steps we need to take before investor due diligence.`,
+
     compliance: `We are a healthcare tech startup that recently added an AI-powered symptom checker to our app. We collect user health data including symptoms, age, and location. Users are based in California, New York, and the EU. We have a standard privacy policy but it predates HIPAA analysis, CCPA/CPRA, and GDPR. We are planning a Series A in 90 days. Identify all compliance gaps and prioritize remediation actions.`,
+
     litigation: `A former business partner is suing us for breach of a joint venture agreement, claiming we diverted clients that originated from the JV to our wholly-owned subsidiary after the JV dissolved. Alleged damages are $1.2M. The JV agreement had no non-compete but did have a non-solicitation clause limited to 12 months. The JV dissolved 14 months ago. Analyze our defense posture, litigation risk, and settlement strategy.`
   };
 
@@ -518,7 +492,30 @@
     document.getElementById('timer-display').textContent = `â± Human input time: ${humanSeconds}s (locked)`;
   }
 
-  // ââ Streamed typing effect ââ
+  document.getElementById('legal-input').addEventListener('input', () => {
+    if (!timerStart && document.getElementById('legal-input').value.length > 0) startTimer();
+  });
+
+  function resetAll() {
+    if (timerInterval) clearInterval(timerInterval);
+    timerStart = null; timerInterval = null; humanSeconds = 0;
+    document.getElementById('timer-display').textContent = 'â± Human input time: waitingâ¦';
+    document.getElementById('legal-input').value = '';
+    ['1','2','3'].forEach(n => {
+      document.getElementById(`card-${n}`).className = 'agent-card';
+      document.getElementById(`dot-${n}`).className = 'status-dot';
+      document.getElementById(`prog-${n}`).style.width = '0%';
+    });
+    document.getElementById('out-1').innerHTML = '<em style="color:#64748b">Awaiting inputâ¦ will extract parties, key clauses, and legal context.</em>';
+    document.getElementById('out-2').innerHTML = '<em style="color:#64748b">Awaiting inputâ¦ will identify legal exposure, red flags, and risk levels.</em>';
+    document.getElementById('out-3').innerHTML = '<em style="color:#64748b">Awaiting inputâ¦ will generate prioritized action steps and negotiation strategy.</em>';
+    document.getElementById('mojo-number').textContent = 'â';
+    document.getElementById('stat-words').textContent = '0';
+    document.getElementById('stat-time').textContent = '0s';
+    document.getElementById('synthesis-text').textContent = 'Run the analysis to generate a cross-agent synthesis and strategic summary.';
+  }
+
+  // Streamed typing effect
   function typeText(elementId, text, delayPerChar, callback) {
     const el = document.getElementById(elementId);
     el.innerHTML = '';
@@ -526,13 +523,11 @@
     const cursor = document.createElement('span');
     cursor.className = 'typing-cursor';
     el.appendChild(cursor);
-
+    const progId = elementId.replace('out-', 'prog-');
     const interval = setInterval(() => {
       if (i < text.length) {
         cursor.insertAdjacentText('beforebegin', text[i]);
         i++;
-        // Update progress bar
-        const progId = elementId.replace('out-', 'prog-');
         const pct = Math.round((i / text.length) * 100);
         document.getElementById(progId).style.width = pct + '%';
       } else {
@@ -543,36 +538,385 @@
     }, delayPerChar);
   }
 
-  // ââ Response generator based on input ââ
   function generateResponses(input) {
     const lower = input.toLowerCase();
-
     let summary, risk, action, synthesis;
 
     if (lower.includes('contract') || lower.includes('vendor') || lower.includes('indemnif') || lower.includes('clause')) {
-      summary = `PARTIES & CONTEXT\nââââââââââââââââ\nParty A: Client (Series B startup, California)\nParty B: SaaS Vendor (Delaware)\nContract Type: Technology Services / API Agreement\n\nKEY CLAUSES IDENTIFIED\nâ¢ Unlimited indemnification â highly unusual; standard is mutual & capped\nâ¢ Unilateral price amendment (30-day notice) â no cap or limit specified\nâ¢ Auto-renewal clause â no wind-down or exit protection\nâ¢ Jurisdiction: Delaware governing law likely applies\n\nCRITICAL CONTEXT\nAs a VC-backed startup, this contract will be scrutinized during due diligence. Unlimited liability provisions are red flags for investors and acquirers.`;
-      risk = `RISK ASSESSMENT: HIGH â ï¸\nââââââââââââââââââââââââ\nð´ CRITICAL â Unlimited Indemnification\n  Exposure: Uncapped financial liability\n  Probability: Medium (API misuse scenarios)\n  Impact: Potentially existential\n\nð  HIGH â Unilateral Price Changes\n  Risk: Vendor can 3x pricing mid-contract\n  No recourse or exit trigger built in\n\nð¡ MEDIUM â Auto-Renewal Lock-in\n  Miss the cancellation window â trapped\n  Especially risky near funding rounds\n\nð¡ MEDIUM â Delaware vs. CA Jurisdiction\n  Litigation venue ambiguity\n  CA courts more favorable to startups\n\nOVERALL EXPOSURE SCORE: 78/100`;
-      action = `RECOMMENDED ACTIONS â PRIORITY ORDER\nââââââââââââââââââââââââââââââââââââââ\nâ P1 (Before Signing): Negotiate indemnification cap\n   â Cap at 12 months of fees paid, mutual only\n   â Add carve-out: exclude gross negligence / willful misconduct\n\nâ P1: Strike or limit price amendment clause\n   â Require 90-day notice + 5% annual cap\n   â Add exit right if price increases >10%\n\nâ P2: Add early termination right\n   â 30-day termination for convenience\n   â Data portability/deletion obligations on exit\n\nâ P3: Add California governing law clause\n   â Or bilateral jurisdiction agreement\n\nð NEGOTIATION POSTURE: Medium leverage â offer multi-year commitment in exchange for liability cap + price lock.`;
+      summary = `PARTIES & CONTEXT
+ââââââââââââââââ
+Party A: Client (Series B startup, California)
+Party B: SaaS Vendor (Delaware)
+Contract Type: Technology Services / API Agreement
+
+KEY CLAUSES IDENTIFIED
+â¢ Unlimited indemnification â highly unusual; standard is mutual & capped
+â¢ Unilateral price amendment (30-day notice) â no cap or limit specified
+â¢ Auto-renewal clause â no wind-down or exit protection
+â¢ Jurisdiction: Delaware governing law likely applies
+
+CRITICAL CONTEXT
+As a VC-backed startup, this contract will be scrutinized during due diligence. Unlimited liability provisions are red flags for investors and acquirers.`;
+
+      risk = `RISK ASSESSMENT: HIGH â ï¸
+ââââââââââââââââââââââââ
+ð´ CRITICAL â Unlimited Indemnification
+   Exposure: Uncapped financial liability
+   Probability: Medium (API misuse scenarios)
+   Impact: Potentially existential
+
+ð  HIGH â Unilateral Price Changes
+   Risk: Vendor can 3Ã pricing mid-contract
+   No recourse or exit trigger built in
+
+ð¡ MEDIUM â Auto-Renewal Lock-in
+   Miss the cancellation window â trapped
+   Especially risky near funding rounds
+
+ð¡ MEDIUM â Delaware vs. CA Jurisdiction
+   Litigation venue ambiguity
+   CA courts more favorable to startups
+
+OVERALL EXPOSURE SCORE: 78/100`;
+
+      action = `RECOMMENDED ACTIONS â PRIORITY ORDER
+ââââââââââââââââââââââââââââââââââââ
+â P1 (Before Signing): Negotiate indemnification cap
+   â Cap at 12 months of fees paid, mutual only
+   â Add carve-out: exclude gross negligence / willful misconduct
+
+â P1: Strike or limit price amendment clause
+   â Require 90-day notice + 5% annual cap
+   â Add exit right if price increases >10%
+
+â P2: Add early termination right
+   â 30-day termination for convenience
+   â Data portability/deletion obligations on exit
+
+â P3: Add California governing law clause
+   â Or bilateral jurisdiction agreement
+
+ð¯ NEGOTIATION POSTURE: Medium leverage â offer multi-year commitment in exchange for liability cap + price lock.`;
+
       synthesis = `High-risk contract with 2 critical terms (unlimited indemnification + unilateral pricing). Do not sign as-is. Three targeted redlines can reduce exposure by ~85%. Estimated negotiation time: 1â2 cycles. Recommend legal counsel review before Series A closes.`;
+
     } else if (lower.includes('employ') || lower.includes('terminat') || lower.includes('harassment') || lower.includes('wrongful')) {
-      summary = `CASE CONTEXT\nââââââââââââ\nClaim Type: Wrongful Termination (Retaliation)\nAlleged Basis: Retaliation for harassment complaint\nTiming: Termination 3 weeks post-complaint â highly significant\nDemand: $450,000\n\nKEY FACTS\nâ¢ Employee filed internal harassment complaint\nâ¢ Terminated 21 days later in RIF\nâ¢ Documented performance issues exist (6 months)\nâ¢ Employer has legitimate RIF basis but timing is problematic\n\nLEGAL FRAMEWORK\nTitle VII, FEHA (if CA), and anti-retaliation statutes create strong presumption when adverse action follows protected activity within 90 days.`;
-      risk = `RISK ASSESSMENT: HIGH â ï¸\nââââââââââââââââââââââââ\nð´ CRITICAL â Temporal Proximity\n  3-week gap creates strong prima facie retaliation case\n  Courts treat <90 days as legally significant\n  Burden shifts to employer to prove independent basis\n\nð  HIGH â Jury Appeal\n  Harassment + firing = sympathetic plaintiff narrative\n  Jury awards in similar CA cases: $200Kâ$2M+\n\nð¡ MEDIUM â Documentation Strength\n  6-month performance record helps\n  But: was PIP/written warning issued before complaint?\n\nð¢ LOW â Procedural (if RIF was documented)\n  If selection criteria pre-date complaint, stronger defense\n\nLITIGATION PROBABILITY: 70%\nSETTLEMENT RANGE: $75Kâ$250K`;
-      action = `RECOMMENDED ACTIONS\nââââââââââââââââââââ\nâ P1 (Immediate): Preserve all records\n   â ESI litigation hold on all HR communications\n   â Do NOT delete performance reviews, complaint file, RIF docs\n\nâ P1: Assess RIF selection criteria documentation\n   â Was selection methodology written before complaint?\n   â Were other employees in same role retained?\n\nâ P2: Evaluate early settlement\n   â $75Kâ$125K range is likely cost-effective vs. litigation\n   â Avoid admission of liability; include NDAs\n\nâ P2: Retain employment litigation counsel immediately\n   â DFEH/EEOC response deadline may be running\n\nâ P3: Conduct internal investigation review\n   â Was harassment complaint properly investigated?\n   â Potential exposure on the underlying harassment claim too`;
+      summary = `CASE CONTEXT
+ââââââââââââ
+Claim Type: Wrongful Termination (Retaliation)
+Alleged Basis: Retaliation for harassment complaint
+Timing: Termination 3 weeks post-complaint â highly significant
+Demand: $450,000
+
+KEY FACTS
+â¢ Employee filed internal harassment complaint
+â¢ Terminated 21 days later in RIF
+â¢ Documented performance issues exist (6 months)
+â¢ Employer has legitimate RIF basis but timing is problematic
+
+LEGAL FRAMEWORK
+Title VII, FEHA (if CA), and anti-retaliation statutes create strong presumption when adverse action follows protected activity within 90 days.`;
+
+      risk = `RISK ASSESSMENT: HIGH â ï¸
+ââââââââââââââââââââââââ
+ð´ CRITICAL â Temporal Proximity
+   3-week gap creates strong prima facie retaliation case
+   Courts treat <90 days as legally significant
+   Burden shifts to employer to prove independent basis
+
+ð  HIGH â Jury Appeal
+   Harassment + firing = sympathetic plaintiff narrative
+   Jury awards in similar CA cases: $200Kâ$2M+
+
+ð¡ MEDIUM â Documentation Strength
+   6-month performance record helps
+   But: was PIP/written warning issued before complaint?
+
+ð¢ LOW â Procedural (if RIF was documented)
+   If selection criteria pre-date complaint, stronger defense
+
+LITIGATION PROBABILITY: 70%
+SETTLEMENT RANGE: $75Kâ$250K`;
+
+      action = `RECOMMENDED ACTIONS
+ââââââââââââââââââââ
+â P1 (Immediate): Preserve all records
+   â ESI litigation hold on all HR communications
+   â Do NOT delete performance reviews, complaint file, RIF docs
+
+â P1: Assess RIF selection criteria documentation
+   â Was selection methodology written before complaint?
+   â Were other employees in same role retained?
+
+â P2: Evaluate early settlement
+   â $75Kâ$125K range is likely cost-effective vs. litigation
+   â Avoid admission of liability; include NDAs
+
+â P2: Retain employment litigation counsel immediately
+   â DFEH/EEOC response deadline may be running
+
+â P3: Conduct internal investigation review
+   â Was harassment complaint properly investigated?
+   â Potential exposure on the underlying harassment claim too`;
+
       synthesis = `Strong retaliation claim due to 3-week timing. Performance documentation helps but likely insufficient alone. Recommend early settlement at $75Kâ$125K before EEOC filing. Litigation cost alone would exceed this range. Key priority: verify RIF selection criteria were documented prior to harassment complaint.`;
+
     } else if (lower.includes('ip') || lower.includes('patent') || lower.includes('open source') || lower.includes('copyright')) {
-      summary = `IP AUDIT CONTEXT\nââââââââââââââââ\nSituation: Modified MIT-licensed open-source code in core product\nRisk Trigger: Competitor patent filing on similar algorithm\nTiming: Pre-Series A â critical IP hygiene window\n\nKEY IP ELEMENTS\nâ¢ MIT License: Permissive â modification & commercial use allowed\nâ¢ No patent grant in MIT (unlike Apache 2.0)\nâ¢ Competitor patent: need to assess claims scope\nâ¢ No formal IP assignment from engineers yet\n\nLEGAL EXPOSURE AREAS\n1. Patent infringement (competitor's new filing)\n2. IP ownership (employee/contractor assignments)\n3. Open source compliance (attribution, notices)\n4. Investor due diligence gap`;
-      risk = `RISK ASSESSMENT: MEDIUM-HIGH\nââââââââââââââââââââââââââââ\nð  HIGH â Patent Infringement Risk\n  Competitor's patent â need claims analysis ASAP\n  Prior art search critical (your MIT base = prior art potential)\n  Filing date matters: if you were first to use, invalidity defense exists\n\nð  HIGH â IP Ownership Gap\n  No formal IP assignments = cloud on title\n  VCs will not close Series A without clean chain of title\n  Past contractors are highest risk\n\nð¡ MEDIUM â Open Source Compliance\n  MIT is permissive but requires attribution\n  No copyleft risk (vs GPL) â limited exposure\n\nð¢ LOW â Trade Secret\n  Modifications likely protectable as trade secret\n  Needs documentation of proprietary elements\n\nDUE DILIGENCE READINESS: 3/10`;
-      action = `RECOMMENDED ACTIONS (90-Day Sprint)\nââââââââââââââââââââââââââââââââââââââ\nâ Week 1-2: IP Assignment Sweep\n   â All employees sign IP assignment agreements NOW\n   â Track down all contractors who touched the codebase\n   â Use PIIA (Proprietary Information & Inventions Agreement)\n\nâ Week 1-2: Patent Landscape Analysis\n   â Retain patent counsel to analyze competitor's claims\n   â Conduct prior art search using your MIT base\n   â File provisional patent application if novel elements found ($2-5K)\n\nâ Week 2-4: Open Source Audit\n   â Run FOSSA or Black Duck scan on codebase\n   â Document all OSS dependencies and licenses\n   â Ensure proper attribution notices in product\n\nâ Month 2: IP Strategy\n   â Decide: patent, trade secret, or defensive publication\n   â Document proprietary algorithm as trade secret if not patenting`;
+      summary = `IP AUDIT CONTEXT
+ââââââââââââââââ
+Situation: Modified MIT-licensed open-source code in core product
+Risk Trigger: Competitor patent filing on similar algorithm
+Timing: Pre-Series A â critical IP hygiene window
+
+KEY IP ELEMENTS
+â¢ MIT License: Permissive â modification & commercial use allowed
+â¢ No patent grant in MIT (unlike Apache 2.0)
+â¢ Competitor patent: need to assess claims scope
+â¢ No formal IP assignment from engineers yet
+
+LEGAL EXPOSURE AREAS
+1. Patent infringement (competitor's new filing)
+2. IP ownership (employee/contractor assignments)
+3. Open source compliance (attribution, notices)
+4. Investor due diligence gap`;
+
+      risk = `RISK ASSESSMENT: MEDIUM-HIGH
+ââââââââââââââââââââââââââââ
+ð  HIGH â Patent Infringement Risk
+   Competitor's patent â need claims analysis ASAP
+   Prior art search critical (your MIT base = prior art potential)
+   Filing date matters: if you were first to use, invalidity defense exists
+
+ð  HIGH â IP Ownership Gap
+   No formal IP assignments = cloud on title
+   VCs will not close Series A without clean chain of title
+   Past contractors are highest risk
+
+ð¡ MEDIUM â Open Source Compliance
+   MIT is permissive but requires attribution
+   No copyleft risk (vs GPL) â limited exposure
+
+ð¢ LOW â Trade Secret
+   Modifications likely protectable as trade secret
+   Needs documentation of proprietary elements
+
+DUE DILIGENCE READINESS: 3/10`;
+
+      action = `RECOMMENDED ACTIONS (90-Day Sprint)
+ââââââââââââââââââââââââââââââââââââ
+â Week 1-2: IP Assignment Sweep
+   â All employees sign IP assignment agreements NOW
+   â Track down all contractors who touched the codebase
+   â Use PIIA (Proprietary Information & Inventions Agreement)
+
+â Week 1-2: Patent Landscape Analysis
+   â Retain patent counsel to analyze competitor's claims
+   â Conduct prior art search using your MIT base
+   â File provisional patent application if novel elements found ($2â5K)
+
+â Week 2-4: Open Source Audit
+   â Run FOSSA or Black Duck scan on codebase
+   â Document all OSS dependencies and licenses
+   â Ensure proper attribution notices in product
+
+â Month 2: IP Strategy
+   â Decide: patent, trade secret, or defensive publication
+   â Document proprietary algorithm as trade secret if not patenting`;
+
       synthesis = `Pre-Series A IP cleanup is urgent â 3 parallel workstreams needed in 90 days. Biggest risk is IP ownership gaps with contractors, not the open-source license. Competitor patent may actually be defensible if MIT codebase predates their filing date. Provisional patent recommended within 30 days to preserve rights.`;
+
     } else if (lower.includes('compliance') || lower.includes('hipaa') || lower.includes('gdpr') || lower.includes('ccpa') || lower.includes('privacy') || lower.includes('healthcare')) {
-      summary = `COMPLIANCE CONTEXT\nââââââââââââââââââ\nProduct: Healthcare AI (symptom checker)\nData Types: Symptoms, age, location â likely PHI/PII\nJurisdictions: California (CCPA/CPRA), New York, EU (GDPR)\nTimeline: Series A in 90 days\n\nREGULATORY FRAMEWORKS TRIGGERED\nâ¢ HIPAA: Health data + AI tool = likely covered\nâ¢ CCPA/CPRA: CA users + personal data collection\nâ¢ GDPR: EU users + special category data (health)\nâ¢ NY SHIELD Act: New York data security requirements\nâ¢ FDA: AI symptom checker may trigger SaMD classification`;
-      risk = `RISK ASSESSMENT: CRITICAL â ï¸\nâââââââââââââââââââââââââââââââ\nð´ CRITICAL â HIPAA Non-Compliance\n  Health symptom data = PHI under HIPAA\n  No BAA in place = material violation\n  OCR enforcement: up to $1.9M per violation category\n  Will kill Series A if discovered in due diligence\n\nð´ CRITICAL â GDPR Article 9 (Special Category Data)\n  Health data = highest protection category\n  DPIA (Data Protection Impact Assessment) required\n  No lawful basis documented = â¬20M or 4% global revenue fine\n\nð  HIGH â CCPA/CPRA\n  Health data has enhanced protections post-CPRA\n  No updated privacy policy = statutory damages risk\n  $100â$750 per consumer per incident\n\nð¡ MEDIUM â FDA SaMD\n  AI symptom checker may be Class II medical device\n  Depends on intended use claims in app`;
-      action = `90-DAY COMPLIANCE SPRINT (Pre-Series A)\nââââââââââââââââââââââââââââââââââââââââ\nâ Days 1-14: HIPAA Foundation\n   â Engage HIPAA counsel + conduct gap analysis\n   â Execute BAAs with all vendors (cloud, analytics, AI APIs)\n   â Update Privacy Policy with HIPAA-compliant Notice of Privacy Practices\n   â Appoint Privacy Officer (can be interim/fractional)\n\nâ Days 1-30: GDPR Compliance\n   â Conduct DPIA for symptom checker feature\n   â Establish lawful basis (explicit consent recommended)\n   â Implement consent management platform\n   â Register DPO or appoint EU representative\n\nâ Days 14-45: CCPA/CPRA Update\n   â Update privacy policy with all CPRA required disclosures\n   â Add "Do Not Sell or Share My Personal Information" mechanism\n   â Implement data subject request workflow (DSARs)\n\nâ Days 30-60: Technical Controls\n   â Implement data minimization and retention policies\n   â Enable encryption at rest and in transit (document this)\n   â Conduct vendor security assessments\n\nâ Days 60-90: Due Diligence Package\n   â Compile compliance documentation for VDR\n   â Obtain SOC 2 Type I (accelerated path available)`;
-      synthesis = `Critical compliance gaps across 3 frameworks â HIPAA, GDPR, and CCPA â that will surface in Series A due diligence. 90-day remediation is achievable but requires immediate resource allocation (~$50-80K in legal/consulting fees). HIPAA is highest priority given enforcement risk. Do not delay.`;
+      summary = `COMPLIANCE CONTEXT
+ââââââââââââââââââ
+Product: Healthcare AI (symptom checker)
+Data Types: Symptoms, age, location â likely PHI/PII
+Jurisdictions: California (CCPA/CPRA), New York, EU (GDPR)
+Timeline: Series A in 90 days
+
+REGULATORY FRAMEWORKS TRIGGERED
+â¢ HIPAA: Health data + AI tool = likely covered
+â¢ CCPA/CPRA: CA users + personal data collection
+â¢ GDPR: EU users + special category data (health)
+â¢ NY SHIELD Act: New York data security requirements
+â¢ FDA: AI symptom checker may trigger SaMD classification`;
+
+      risk = `RISK ASSESSMENT: CRITICAL â ï¸
+âââââââââââââââââââââââââââââââ
+ð´ CRITICAL â HIPAA Non-Compliance
+   Health symptom data = PHI under HIPAA
+   No BAA in place = material violation
+   OCR enforcement: up to $1.9M per violation category
+   Will kill Series A if discovered in due diligence
+
+ð´ CRITICAL â GDPR Article 9 (Special Category Data)
+   Health data = highest protection category
+   DPIA (Data Protection Impact Assessment) required
+   No lawful basis documented = â¬20M or 4% global revenue fine
+
+ð  HIGH â CCPA/CPRA
+   Health data has enhanced protections post-CPRA
+   No updated privacy policy = statutory damages risk
+   $100â$750 per consumer per incident
+
+ð¡ MEDIUM â FDA SaMD
+   AI symptom checker may be Class II medical device
+   Depends on intended use claims in app`;
+
+      action = `90-DAY COMPLIANCE SPRINT (Pre-Series A)
+ââââââââââââââââââââââââââââââââââââââ
+â Days 1-14: HIPAA Foundation
+   â Engage HIPAA counsel + conduct gap analysis
+   â Execute BAAs with all vendors (cloud, analytics, AI APIs)
+   â Update Privacy Policy with HIPAA-compliant Notice of Privacy Practices
+   â Appoint Privacy Officer (can be interim/fractional)
+
+â Days 1-30: GDPR Compliance
+   â Conduct DPIA for symptom checker feature
+   â Establish lawful basis (explicit consent recommended)
+   â Implement consent management platform
+   â Register DPO or appoint EU representative
+
+â Days 14-45: CCPA/CPRA Update
+   â Update privacy policy with all CPRA required disclosures
+   â Add "Do Not Sell or Share My Personal Information" mechanism
+   â Implement data subject request workflow (DSARs)
+
+â Days 30-60: Technical Controls
+   â Implement data minimization and retention policies
+   â Enable encryption at rest and in transit (document this)
+   â Conduct vendor security assessments
+
+â Days 60-90: Due Diligence Package
+   â Compile compliance documentation for VDR
+   â Obtain SOC 2 Type I (accelerated path available)`;
+
+      synthesis = `Critical compliance gaps across 3 frameworks â HIPAA, GDPR, and CCPA â that will surface in Series A due diligence. 90-day remediation is achievable but requires immediate resource allocation (~$50â80K in legal/consulting fees). HIPAA is highest priority given enforcement risk. Do not delay.`;
+
+    } else if (lower.includes('joint venture') || lower.includes('non-solicit') || lower.includes('non-compete') || lower.includes('breach') || lower.includes('litigation') || lower.includes('suing')) {
+      summary = `LITIGATION CONTEXT
+ââââââââââââââââââ
+Matter: Breach of Joint Venture Agreement
+Plaintiff: Former business partner
+Damages Claimed: $1.2M
+Core Allegation: Client diversion to wholly-owned sub after JV dissolution
+
+KEY FACTS
+â¢ JV dissolved 14 months ago
+â¢ Non-solicit clause: 12 months (EXPIRED 2 months ago)
+â¢ No non-compete in JV agreement
+â¢ Alleged client diversion occurred "after dissolution"
+
+LEGAL FRAMEWORK
+â¢ Contract interpretation (JV agreement terms)
+â¢ Non-solicit enforceability and scope
+â¢ Fiduciary duty analysis (JV partners owed each other duties)
+â¢ Unjust enrichment / tortious interference as alternative theories`;
+
+      risk = `RISK ASSESSMENT: MEDIUM (Defensible)
+ââââââââââââââââââââââââââââââââââââ
+ð¡ MEDIUM â Temporal Defense is Strong
+   Non-solicit expired 2 months before alleged diversion
+   Clean contractual defense on primary claim
+
+ð  HIGH â Fiduciary Duty Residual Claim
+   Partner duties may extend beyond dissolution
+   Depends on state law (DE: limited; CA: broader)
+
+ð¡ MEDIUM â Client Attribution Dispute
+   "Clients originated from JV" is factually contested
+   Document timeline of client relationships carefully
+
+ð¢ LOW â Damages Inflation
+   $1.2M claim likely overstated
+   Expert analysis will narrow significantly
+
+LITIGATION PROBABILITY: 40%
+SETTLEMENT RANGE: $100Kâ$300K (nuisance value)`;
+
+      action = `RECOMMENDED DEFENSE STRATEGY
+âââââââââââââââââââââââââââââ
+â P1: Preserve all records + litigation hold
+   â Client communications, JV documents, transition records
+
+â P1: Motion to dismiss on expired non-solicit
+   â Strong contractual defense â test early
+   â Forces plaintiff to pivot to weaker fiduciary theories
+
+â P2: Document client origin carefully
+   â Which clients pre-date JV? Post-date? Truly "originated" from JV?
+   â Declarations from sales team on relationship history
+
+â P2: Evaluate nuisance-value settlement
+   â $100â150K may resolve faster than 18-month litigation
+   â Preserve relationships if business-adjacent
+
+â P3: Counter-claim analysis
+   â Did plaintiff breach JV dissolution terms?
+   â Accounting demand for JV wind-down
+
+ð¯ POSTURE: Aggressive early motion practice, then assess settlement`;
+
+      synthesis = `Strong defense anchored on expired non-solicit clause. Fiduciary duty theory is the real risk but narrower. Recommend aggressive motion to dismiss to test plaintiff's theories early â success likely cuts case by 70%. Settlement acceptable in $100â150K range if plaintiff survives motion. Total litigation budget estimate: $250â400K if tried.`;
+
     } else {
-      summary = `MATTER OVERVIEW\nâââââââââââââââ\nInput analyzed for legal context, parties, and key facts.\n\nPARTIES IDENTIFIED\nBased on the matter description, this appears to involve multiple parties with competing interests and potential legal obligations.\n\nKEY LEGAL ISSUES\nâ¢ Primary claim or dispute requiring legal analysis\nâ¢ Applicable statutory and regulatory framework\nâ¢ Contractual obligations and representations\nâ¢ Jurisdictional considerations\n\nRELEVANT LEGAL FRAMEWORK\nApplicable state and federal laws identified. Cross-jurisdictional issues may apply. Recommend jurisdiction-specific counsel review for final advice.`;
-      risk = `RISK ASSESSMENT\nâââââââââââââââ\nð  HIGH PRIORITY RISKS\n  â¢ Primary legal exposure from the core dispute\n  â¢ Documentation and evidentiary considerations\n  â¢ Statute of limitations analysis needed\n  â¢ Potential for escalation if unaddressed\n\nð¡ MEDIUM RISKS\n  â¢ Secondary claims that may arise from primary matter\n  â¢ Regulatory notification requirements\n  â¢ Reputational considerations\n\nð¢ MANAGEABLE RISKS\n  â¢ Procedural matters that can be addressed systematically\n  â¢ Standard indemnification and limitation of liability\n\nOVERALL EXPOSURE: Moderate to High\nRECOMMENDATION: Engage qualified counsel within 30 days`;
-      action = `RECOMMENDED ACTION PLAN\nâââââââââââââââââââââââ\nâ IMMEDIATE (0-7 days)\n   â Document all relevant facts and preserve evidence\n   â Identify all potentially relevant documents and communications\n   â Assess statute of limitations and any hard deadlines\n\nâ SHORT-TERM (7-30 days)\n   â Engage specialized legal counsel for this matter type\n   â Conduct privilege review of internal communications\n   â Assess insurance coverage applicability\n   â Evaluate early resolution vs. litigation path\n\nâ MEDIUM-TERM (30-90 days)\n   â Develop comprehensive legal strategy\n   â Consider alternative dispute resolution options\n   â Address root cause to prevent recurrence\n\nâ ONGOING\n   â Implement improved policies and procedures\n   â Regular legal audit of similar arrangements`;
+      summary = `MATTER OVERVIEW
+âââââââââââââââ
+Input analyzed for legal context, parties, and key facts.
+
+PARTIES IDENTIFIED
+Based on the matter description, this appears to involve multiple parties with competing interests and potential legal obligations.
+
+KEY LEGAL ISSUES
+â¢ Primary claim or dispute requiring legal analysis
+â¢ Applicable statutory and regulatory framework
+â¢ Contractual obligations and representations
+â¢ Jurisdictional considerations
+
+RELEVANT LEGAL FRAMEWORK
+Applicable state and federal laws identified. Cross-jurisdictional issues may apply. Recommend jurisdiction-specific counsel review for final advice.`;
+
+      risk = `RISK ASSESSMENT
+ââââââââââââââ
+ð  HIGH PRIORITY RISKS
+   â¢ Primary legal exposure from the core dispute
+   â¢ Documentation and evidentiary considerations
+   â¢ Statute of limitations analysis needed
+   â¢ Potential for escalation if unaddressed
+
+ð¡ MEDIUM RISKS
+   â¢ Secondary claims that may arise from primary matter
+   â¢ Regulatory notification requirements
+   â¢ Reputational considerations
+
+ð¢ MANAGEABLE RISKS
+   â¢ Procedural matters that can be addressed systematically
+   â¢ Standard indemnification and limitation of liability
+
+OVERALL EXPOSURE: Moderate to High
+RECOMMENDATION: Engage qualified counsel within 30 days`;
+
+      action = `RECOMMENDED ACTION PLAN
+âââââââââââââââââââââââ
+â IMMEDIATE (0-7 days)
+   â Document all relevant facts and preserve evidence
+   â Identify all potentially relevant documents and communications
+   â Assess statute of limitations and any hard deadlines
+
+â SHORT-TERM (7-30 days)
+   â Engage specialized legal counsel for this matter type
+   â Conduct privilege review of internal communications
+   â Assess insurance coverage applicability
+   â Evaluate early resolution vs. litigation path
+
+â MEDIUM-TERM (30-90 days)
+   â Develop comprehensive legal strategy
+   â Consider alternative dispute resolution options
+   â Address root cause to prevent recurrence
+
+â ONGOING
+   â Implement improved policies and procedures
+   â Regular legal audit of similar arrangements`;
+
       synthesis = `This matter requires prompt legal attention. Key priorities are evidence preservation, statute of limitations review, and engaging qualified counsel. Early resolution pathways should be evaluated before positions harden. Cost-benefit analysis of litigation vs. settlement recommended within 30 days.`;
     }
 
@@ -587,53 +931,56 @@
     }
 
     // Lock timer
-    if (!timerStart) { timerStart = Date.now(); humanSeconds = 1; }
-    else stopTimer();
+    if (!timerStart) {
+      timerStart = Date.now();
+      humanSeconds = 1;
+    } else {
+      stopTimer();
+    }
 
     // UI state
     const btn = document.getElementById('run-btn');
     btn.disabled = true;
     document.getElementById('btn-icon').textContent = '';
-    document.getElementById('btn-text').textContent = 'Orchestrating agents...';
-    document.getElementById('btn-spinner').style.display = 'block';
+    document.getElementById('btn-text').textContent = 'Orchestrating agentsâ¦';
+    document.getElementById('btn-spinner').style.display = 'inline-block';
 
     // Reset cards
     ['1','2','3'].forEach(n => {
       document.getElementById(`card-${n}`).className = 'agent-card';
       document.getElementById(`dot-${n}`).className = 'status-dot active';
       document.getElementById(`prog-${n}`).style.width = '0%';
-      document.getElementById(`out-${n}`).innerHTML = '<em style="color:#64748b">Agent initializing...</em>';
+      document.getElementById(`out-${n}`).innerHTML = '<em style="color:#64748b">Agent initializingâ¦</em>';
     });
-    document.getElementById('mojo-number').textContent = 'â';
+    document.getElementById('mojo-number').textContent = 'â¦';
     document.getElementById('stat-words').textContent = '0';
-    document.getElementById('synthesis-text').textContent = 'Agents running in parallel...';
+    document.getElementById('synthesis-text').textContent = 'Agents running in parallelâ¦';
 
     // Generate responses
     const { summary, risk, action, synthesis } = generateResponses(input);
 
-    // Parallel execution simulation (staggered start, overlapping)
-    const delays = [200, 400, 600]; // agents start slightly offset (parallel)
-    const speeds = [18, 16, 14];    // chars per interval ms
-
+    // Parallel execution simulation â staggered start, overlapping completion
+    const delays = [200, 400, 600];   // agents start slightly offset
+    const speeds = [16, 14, 12];      // chars per interval ms
     let completed = 0;
     const totalText = summary + risk + action;
 
     const finish = (agentNum) => {
-      document.getElementById(`dot-${agentNum}`).className = `status-dot done`;
+      document.getElementById(`dot-${agentNum}`).className = 'status-dot done';
       document.getElementById(`card-${agentNum}`).className = `agent-card done-${agentNum}`;
-      document.getElementById(`prog-${agentNum.toString().replace('','')}`).style.width = '100%';
+      document.getElementById(`prog-${agentNum}`).style.width = '100%';
       completed++;
 
       if (completed === 3) {
         // All done â calculate MoJo
         const outputWords = totalText.split(/\s+/).length;
         const mojoScore = Math.round(outputWords / humanSeconds);
-        document.getElementById('mojo-number').textContent = mojoScore;
+        document.getElementById('mojo-number').textContent = mojoScore.toLocaleString();
         document.getElementById('stat-words').textContent = outputWords.toLocaleString();
         document.getElementById('stat-time').textContent = humanSeconds + 's';
 
         // Synthesis
-        typeText('synthesis-text', synthesis, 12, () => {});
+        typeText('synthesis-text', synthesis, 10, () => {});
 
         // Re-enable button
         btn.disabled = false;
@@ -644,21 +991,20 @@
         // Reset timer for next run
         timerStart = null;
         timerInterval = null;
-        document.getElementById('timer-display').textContent = 'â± Human input time: waiting...';
+        document.getElementById('timer-display').textContent = 'â± Human input time: waitingâ¦';
       }
     };
 
-    // Launch agents in parallel (overlapping, not sequential)
+    // Launch agents in parallel
     setTimeout(() => typeText('out-1', summary, speeds[0], () => finish('1')), delays[0]);
-    setTimeout(() => typeText('out-2', risk, speeds[1], () => finish('2')), delays[1]);
-    setTimeout(() => typeText('out-3', action, speeds[2], () => finish('3')), delays[2]);
+    setTimeout(() => typeText('out-2', risk,    speeds[1], () => finish('2')), delays[1]);
+    setTimeout(() => typeText('out-3', action,  speeds[2], () => finish('3')), delays[2]);
   }
 
-  // Allow Enter+Ctrl to run
+  // Ctrl/Cmd + Enter to run
   document.addEventListener('keydown', (e) => {
     if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') runOrchestration();
   });
 </script>
-
 </body>
 </html>
